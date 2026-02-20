@@ -88,7 +88,7 @@ export function VideoPlayer({ videoId, onMenuOpen, onChannelSwitcherOpen }: Vide
         ytPlayerRef.current.destroy()
       }
     }
-  }, [videoId, volume])
+  }, [videoId])
 
   const handleActivity = useCallback(() => {
     if (!isFullscreen) return // Only auto-hide in fullscreen
@@ -249,13 +249,15 @@ export function VideoPlayer({ videoId, onMenuOpen, onChannelSwitcherOpen }: Vide
                       </div>
 
                       {/* Center: Live Badge */}
-                      <div className="flex items-center gap-2 px-4 py-2 bg-red-600/20 border border-red-500/30 rounded-full">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                        </span>
-                        <span className="text-red-100 text-sm font-medium uppercase tracking-wider">Live</span>
-                      </div>
+                      {!isMuted && (
+                        <div className="flex items-center gap-2 px-4 py-2 bg-red-600/20 border border-red-500/30 rounded-full">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                          </span>
+                          <span className="text-red-100 text-sm font-medium uppercase tracking-wider">Live</span>
+                        </div>
+                      )}
 
                       {/* Right: Action Group */}
                       <div className="flex items-center gap-2">
@@ -334,13 +336,15 @@ export function VideoPlayer({ videoId, onMenuOpen, onChannelSwitcherOpen }: Vide
               </div>
 
               {/* Center: Live Badge */}
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600/20 border border-red-500/30 rounded-full">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                </span>
-                <span className="text-red-100 text-sm font-medium uppercase tracking-wider">Live</span>
-              </div>
+              {!isMuted && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600/20 border border-red-500/30 rounded-full">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                  <span className="text-red-100 text-sm font-medium uppercase tracking-wider">Live</span>
+                </div>
+              )}
 
               {/* Right: Action Group */}
               <div className="flex items-center gap-2">
