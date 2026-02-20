@@ -28,6 +28,7 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
   const [volume, setVolume] = useState(100)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showVolumeTooltip, setShowVolumeTooltip] = useState(false)
+  const [forceRotate, setForceRotate] = useState(false)
   const [currentData, setCurrentData] = useState<CurrentVideoData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [syncError, setSyncError] = useState<string | null>(null)
@@ -747,12 +748,31 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
     setTimeout(() => setShowVolumeTooltip(false), 1000)
   }
 
-  const handleFullscreen = () => {
+  const handleFullscreen = async () => {
     if (!playerRef.current) return
-    if (document.fullscreenElement) {
-      document.exitFullscreen()
-    } else {
-      playerRef.current.requestFullscreen()
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+        setForceRotate(false)
+        try { (screen as any).orientation?.unlock?.() } catch (err) { /* ignore */ }
+      } else {
+        await playerRef.current.requestFullscreen()
+        if (isMobile) {
+          try {
+            await (screen as any).orientation?.lock?.('landscape')
+            setForceRotate(false)
+          } catch (err) {
+            // orientation lock unavailable — use CSS rotate fallback
+            setForceRotate(true)
+          }
+        } else {
+          setForceRotate(false)
+        }
+      }
+    } catch (err) {
+      console.error('Fullscreen error:', err)
+      // ensure fallback so user still sees full video
+      setForceRotate(true)
     }
   }
 
@@ -765,23 +785,84 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
     }
   }, [onMenuOpen])
 
-  // Fullscreen change handler
+  // Fullscreen change handler (attempt orientation lock; fallback to CSS rotate)
   useEffect(() => {
-    const handleFullscreenChange = () => {
+    const handleFullscreenChange = async () => {
       const isFs = !!document.fullscreenElement
       setIsFullscreen(isFs)
-      
+
       if (isFs) {
         setShowControls(true)
-      } else if (openMenuAfterExitRef.current) {
-        openMenuAfterExitRef.current = false
-        onMenuOpen()
+        if (isMobile) {
+          try {
+            await (screen as any).orientation?.lock?.('landscape')
+            setForceRotate(false)
+          } catch (err) {
+            // lock not supported or denied -> rotate iframe via CSS
+            setForceRotate(true)
+          }
+        } else {
+          setForceRotate(false)
+        }
+      } else {
+        // exit fullscreen
+        try { (screen as any).orientation?.unlock?.() } catch (err) { /* ignore */ }
+        setForceRotate(false)
+        if (openMenuAfterExitRef.current) {
+          openMenuAfterExitRef.current = false
+          onMenuOpen()
+        }
       }
     }
 
     document.addEventListener('fullscreenchange', handleFullscreenChange)
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
-  }, [onMenuOpen])
+  }, [onMenuOpen, isMobile])
+
+  // Apply CSS rotation to iframe container when orientation lock isn't available
+  useEffect(() => {
+    const el = iframeContainerRef.current
+    const apply = () => {
+      if (!el) return
+      if (forceRotate && isFullscreen) {
+        // set rotated size so video fills the screen (width/height swapped)
+        el.style.position = 'absolute'
+        el.style.left = '50%'
+        el.style.top = '50%'
+        el.style.transform = 'translate(-50%, -50%) rotate(90deg)'
+        el.style.transformOrigin = 'center center'
+        el.style.width = `${window.innerHeight}px`
+        el.style.height = `${window.innerWidth}px`
+      } else {
+        // reset styles
+        el.style.position = ''
+        el.style.left = ''
+        el.style.top = ''
+        el.style.transform = ''
+        el.style.transformOrigin = ''
+        el.style.width = ''
+        el.style.height = ''
+      }
+    }
+
+    apply()
+    const onResize = () => { if (forceRotate) apply() }
+    window.addEventListener('resize', onResize)
+    window.addEventListener('orientationchange', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('orientationchange', onResize)
+      if (el) {
+        el.style.position = ''
+        el.style.left = ''
+        el.style.top = ''
+        el.style.transform = ''
+        el.style.transformOrigin = ''
+        el.style.width = ''
+        el.style.height = ''
+      }
+    }
+  }, [forceRotate, isFullscreen])
 
   // Activity listeners
   useEffect(() => {
@@ -840,6 +921,13 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
                 <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
                 <p className="text-white text-lg">Loading broadcast...</p>
               </div>
+            </div>
+          )}
+
+          {/* Mobile rotate fallback notice (shown when orientation lock isn't supported) */}
+          {forceRotate && isMobile && isFullscreen && (
+            <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none">
+              <div className="bg-black/60 text-white text-sm px-3 py-2 rounded-md">If your device didn't rotate automatically, the video has been rotated to fill the screen.</div>
             </div>
           )}
 
