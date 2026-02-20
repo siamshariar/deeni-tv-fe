@@ -148,7 +148,6 @@ export function getUpcomingPrograms(count: number = 10) {
     programIndices
   }
 }
-
 /**
  * Format time in seconds to MM:SS
  */
