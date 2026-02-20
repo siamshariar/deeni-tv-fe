@@ -965,7 +965,7 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
           )}
 
           {/* Cycle Indicator */}
-          {playerReady && (
+          {/* {playerReady && (
             <div className="absolute top-4 left-4 z-40">
               <div className="flex items-center gap-2 bg-zinc-900/80 text-white/80 px-3 py-1 rounded-full text-xs border border-white/10 backdrop-blur-sm">
                 <Repeat className="h-3 w-3 text-primary" />
@@ -975,7 +975,7 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
                 )}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* TV Ticker */}
           {showTicker && currentData && (
@@ -1127,6 +1127,16 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
             </AnimatePresence>
           )}
         </div>
+
+        {/* Exact program title + description shown directly beneath the iframe (windowed mode) */}
+        {!isFullscreen && currentData && (
+          <div className="bg-zinc-900/90 border-b border-zinc-700/50 rounded-b-lg px-4 py-3">
+            <h3 className="text-white text-lg font-semibold line-clamp-2">{currentData.program.title}</h3>
+            {currentData.program.description && (
+              <p className="text-white/60 text-sm mt-1 line-clamp-2">{currentData.program.description}</p>
+            )}
+          </div>
+        )}
 
         {/* Windowed Mode Controls */}
         {!isFullscreen && (
