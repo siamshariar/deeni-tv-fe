@@ -989,7 +989,7 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                       </span>
-                      <span className="text-red-100 text-[10px] sm:text-xs font-bold uppercase">LIVE</span>
+                      <span className="text-red-100 text-[10px] sm:text-xs font-bold uppercase">NOW</span>
                     </div>
 
                     {/* Title */}
