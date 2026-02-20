@@ -977,15 +977,26 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
                         <Button variant="ghost" size="icon" onClick={toggleMute} className="text-white hover:bg-white/10 h-8 w-8 sm:h-10 sm:w-10">
                           {isMuted ? <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" /> : <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />}
                         </Button>
-                        <div className="flex-1 relative hidden sm:block">
-                          <Slider 
-                            value={[volume]} 
-                            onValueChange={handleVolumeChange} 
-                            max={100} 
-                            step={1} 
-                            disabled={isMuted}
-                          />
-                        </div>
+                        <div className="flex-1 relative">
+                          {/* Volume percentage tooltip (shown above slider briefly) */}
+                          {showVolumeTooltip && (
+                            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-zinc-800/90 text-white text-xs px-2 py-1 rounded-md shadow-sm z-50">
+                              {volume}%
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1">
+                              <Slider
+                                aria-label="Volume"
+                                value={[volume]}
+                                onValueChange={handleVolumeChange}
+                                max={100}
+                                step={1}
+                              />
+                            </div>
+                            <div className="ml-2 text-xs text-white/70 w-10 text-right">{volume}%</div>
+                          </div>
+                        </div>"},{"filePath":"/var/www/deeni-tv-fe/deeni-tv-fe/components/synced-video-player.tsx","oldString":"                <div className=\"hidden sm:block flex-1\">\n                  <Slider \n                    value={[volume]} \n                    onValueChange={handleVolumeChange} \n                    max={100} \n                    step={1} \n                    disabled={isMuted}\n                  />\n                </div>","newString":"                <div className=\"flex-1\">\n                  <div className=\"relative\">\n                    {showVolumeTooltip && (\n                      <div className=\"absolute -top-7 left-1/2 transform -translate-x-1/2 bg-zinc-800/90 text-white text-xs px-2 py-1 rounded-md z-50\">\n                        {volume}%\n                      </div>\n                    )}\n                    <Slider\n                      aria-label=\"Volume\"\n                      value={[volume]}\n                      onValueChange={handleVolumeChange}\n                      max={100}\n                      step={1}\n                    />\n                  </div>\n                </div>"},{"filePath":"/var/www/deeni-tv-fe/deeni-tv-fe/components/synced-video-player.tsx","oldString":"  const handleFullscreen = () => {\n    if (!playerRef.current) return\n    if (document.fullscreenElement) {\n      document.exitFullscreen()\n    } else {\n      playerRef.current.requestFullscreen()\n    }\n  }","newString":"  const handleFullscreen = async () => {\n    if (!playerRef.current) return\n    try {\n      if (document.fullscreenElement) {\n        await document.exitFullscreen()\n        try { (screen as any).orientation?.unlock?.() } catch (err) { /* ignore */ }\n      } else {\n        await playerRef.current.requestFullscreen()\n        // Lock orientation on mobile for a true fullscreen experience\n        if (isMobile) {\n          try { await (screen as any).orientation?.lock?.('landscape') } catch (err) { /* ignore */ }\n        }\n      }\n    } catch (err) {\n      console.error('Fullscreen error:', err)\n    }\n  }"},{"filePath":"/var/www/deeni-tv-fe/deeni-tv-fe/components/synced-video-player.tsx","oldString":"  useEffect(() => {\n    const handleFullscreenChange = () => {\n      const isFs = !!document.fullscreenElement\n      setIsFullscreen(isFs)\n      \n      if (isFs) {\n        setShowControls(true)\n      } else if (openMenuAfterExitRef.current) {\n        openMenuAfterExitRef.current = false\n        onMenuOpen()\n      }\n    }\n\n    document.addEventListener('fullscreenchange', handleFullscreenChange)\n    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)\n  }, [onMenuOpen])","newString":"  useEffect(() => {\n    const handleFullscreenChange = () => {\n      const isFs = !!document.fullscreenElement\n      setIsFullscreen(isFs)\n      \n      if (isFs) {\n        setShowControls(true)\n      } else {\n        // Unlock orientation when exiting fullscreen (mobile)\n        try { (screen as any).orientation?.unlock?.() } catch (err) { /* ignore */ }\n        if (openMenuAfterExitRef.current) {\n          openMenuAfterExitRef.current = false\n          onMenuOpen()\n        }\n      }\n    }\n\n    document.addEventListener('fullscreenchange', handleFullscreenChange)\n    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)\n  }, [onMenuOpen])"}]}Editor's note: The replacements were applied.}
                       </div>
 
                       {/* Center Info */}
