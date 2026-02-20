@@ -913,6 +913,9 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
             ref={iframeContainerRef}
             className="absolute inset-0 w-full h-full"
           />
+
+          {/* Transparent overlay to block iframe interactions so the app's controls are used */}
+          <div className="absolute inset-0 w-full h-full pointer-events-auto" />
           
           {/* Loading overlay */}
           {isLoading && !playerReady && (
