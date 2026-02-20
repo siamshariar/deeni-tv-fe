@@ -1084,7 +1084,7 @@ export function SyncedVideoPlayer({ onMenuOpen, onChannelSwitcherOpen }: SyncedV
                             </div>
                             <div className="ml-2 text-xs text-white/70 w-10 text-right">{volume}%</div>
                           </div>
-                        
+                        </div>
                       </div>
 
                       {/* Center Info */}
