@@ -1,7 +1,7 @@
 import { VideoProgram, CurrentVideoData } from '@/types/schedule'
 
 // Dr. Khandaker Abdullah Jahangir schedule (3 confirmed + 2 placeholders)
-// Replace placeholder entries (id 4 & 5) with exact YouTube IDs/titles when you have them
+// Replace placeholder entries (id 4 & 5) with exact YouTube IDs/titles when you have
 export const SCHEDULE: VideoProgram[] = [
   {
     id: '1',
