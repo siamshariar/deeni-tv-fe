@@ -16,32 +16,32 @@ export const SCHEDULE: VideoProgram[] = [
   },
   {
     id: '2',
-    videoId: 'e6RjY3wx0TA',
-    title: 'For this, one must have a verified mind.',
-    description: 'Lecture on critical thinking and faith (approx duration).',
-    duration: 3600, // 60 minutes (approx)
+    videoId: 'fXSwr_njN5U',
+    title: 'Ramadan Guide – রমজান পূর্ব প্রস্তুতি',
+    description: 'Dr. Abdullah Jahangir explains important Ramadan details and preparation.',
+    duration: 1494, 
     startTime: new Date(),
     endTime: new Date(),
     category: 'Lecture',
-    language: 'English'
+    language: 'Bengali'
   },
   {
     id: '3',
-    videoId: 'b2c3TfWfL2c',
-    title: 'অভাবনীয় এক নসিহত! মানুষের উপকার করার ফজিলত',
-    description: 'Short clip about the virtue of helping others.',
-    duration: 37, // short
+    videoId: 'MsyOd9nnXRM',
+    title: 'Ramadan FAQs – রামাদান প্রশ্নোত্তর',
+    description: 'Dr. Abdullah Jahangir answers common Ramadan fasting (সিয়াম) questions.',
+    duration: 1023,
     startTime: new Date(),
     endTime: new Date(),
-    category: 'Shorts',
+    category: 'Lecture',
     language: 'Bengali'
   },
   {
     id: '4',
-    videoId: 'hTWKbfoikeg', // Numa Numa (classic test video)
-    title: 'Daily Wisdom & Life Guidance',
-    description: 'Practical Islamic guidance for modern life',
-    duration: 1800, // 30 minutes
+    videoId: 'O03n_lX0lnU',
+    title: 'Important Ramadan Answers – মাহে রমজান সম্পর্কিত প্রশ্নের উত্তর',
+    description: '20 key Ramadan questions answered by Dr. Abdullah Jahangir.',
+    duration: 900,
     startTime: new Date(),
     endTime: new Date(),
     category: 'Lecture',
@@ -49,15 +49,15 @@ export const SCHEDULE: VideoProgram[] = [
   },
   {
     id: '5',
-    videoId: 'dQw4w9WgXcQ', // Rick Roll again
-    title: 'Evening Devotional',
-    description: 'Evening prayers and spiritual contemplation',
-    duration: 2400, // 40 minutes
+    videoId: 'wX1AEPleTHw',
+    title: 'Siyam Sunnah & Rules – রোজার নিয়ত ও সুন্নত',
+    description: 'Complete guide to fasting intention and Sunnah by Dr. Abdullah Jahangir.',
+    duration: 1200,
     startTime: new Date(),
     endTime: new Date(),
     category: 'Lecture',
     language: 'Bengali'
-  },
+  }
 ]
 
 
